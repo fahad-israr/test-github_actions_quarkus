@@ -30,4 +30,5 @@ jobs:
         upload_url: ${{ github.event.release.upload_url }}
         asset_path: ./target/starfish-${{ github.event.release.tag_name }}-runner
         asset_name: starfish-${{ github.event.release.tag_name }}-runner-mac
+        asset_label: macos
         asset_content_type: application/octet-stream
