@@ -39,7 +39,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ github.event.release.upload_url }}
-        asset_path: starfish-${{ github.event.release.tag_name }}-runner.exe
+        asset_path: target/starfish-${{ github.event.release.tag_name }}-runner.exe
         asset_name: starfish-${{ github.event.release.tag_name }}-win64.exe
         asset_label: win64
         asset_content_type: application/octet-stream
