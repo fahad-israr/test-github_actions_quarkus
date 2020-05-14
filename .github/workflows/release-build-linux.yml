@@ -1,4 +1,4 @@
-name: release-build
+name: release-build-linux
 
 on:
   release:
@@ -30,4 +30,5 @@ jobs:
         upload_url: ${{ github.event.release.upload_url }}
         asset_path: ./target/starfish-${{ github.event.release.tag_name }}-runner
         asset_name: starfish-${{ github.event.release.tag_name }}-runner-linux
+        asset_label: linux
         asset_content_type: application/octet-stream
