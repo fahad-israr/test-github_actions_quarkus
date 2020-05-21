@@ -5,8 +5,7 @@ on:
     branches:
     - master
   pull_request:
-    branches:
-      - master
+
   release:
     types: [created] 
 
@@ -33,8 +32,8 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        upload_url: ${{ github.event.release.upload_url }}
+        upload_url: ${{ github.event_path }}/${{ github.run_number }}
         asset_path: ./target/starfish-${{ github.run_number }}-runner
-        asset_name: starfish-${{ github.run_number }}-runner-linux
+        asset_name: starfish-native-linux
         asset_label: linux
         asset_content_type: application/octet-stream
