@@ -40,5 +40,5 @@ jobs:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: ./target/starfish-1.0.0-runner
           asset_name: starfish-runner-linux
-          asset_label: linux
+          asset_label: linux-ubuntu-latest
           asset_content_type: application/octet-stream
