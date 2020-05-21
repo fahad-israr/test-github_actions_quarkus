@@ -1,11 +1,6 @@
 name: release-build-linux
 
 on:
-  push:
-    branches:
-    - master
-  pull_request:
-
   release:
     types: [created] 
 
@@ -23,7 +18,7 @@ jobs:
     - name: Install native-image
       run: gu install native-image
     - name: Set version
-      run: ./mvnw versions:set -DnewVersion="${{ github.run_number }}" 
+      run: ./mvnw versions:set -DnewVersion="${{ github.event.release.tag_name }}" 
     - name: Build native executable
       run: ./mvnw package -Dnative 
     - name: Upload native executable
@@ -32,8 +27,8 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        upload_url: ${{ github.event_path }}/${{ github.run_number }}
-        asset_path: ./target/starfish-${{ github.run_number }}-runner
-        asset_name: starfish-native-linux
+        upload_url: ${{ github.event.release.upload_url }}
+        asset_path: ./target/starfish-${{ github.event.release.tag_name }}-runner
+        asset_name: starfish-${{ github.event.release.tag_name }}-runner-linux
         asset_label: linux
         asset_content_type: application/octet-stream
