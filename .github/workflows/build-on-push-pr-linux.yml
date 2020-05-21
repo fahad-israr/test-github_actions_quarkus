@@ -24,7 +24,7 @@ jobs:
       - name: Build native executable
         run: ./mvnw package -Dnative 
   
-      - name: Create Release & Upload native executable
+      - name: Create Release
         id: create_release
         uses: actions/create-release@v1.0.0
         env:
@@ -35,7 +35,8 @@ jobs:
           draft: false
           prerelease: false
 
-      - uses: shogo82148/actions-upload-release-asset@v1
+      - name: Upload native executable
+        uses: shogo82148/actions-upload-release-asset@v1
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: ./target/starfish-1.0.0-runner
