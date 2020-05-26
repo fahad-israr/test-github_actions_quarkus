@@ -43,7 +43,7 @@ jobs:
 
 # Trigger this job only on Push or Pull-Request
   build-on-push-pr:
-    if: github.event_name!='release'&& (github.event_name == 'pull_request'|| github.event_name != 'push')
+    if: github.event_name!='release'&& (github.event_name == 'pull_request'|| github.event_name == 'push')
     name: Build on Push or PR
     runs-on: macos-latest
     steps:
