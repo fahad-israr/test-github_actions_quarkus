@@ -75,8 +75,7 @@ jobs:
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: ./target/starfish-1.0.0-runner
-          asset_name: starfish
-          tag: ${{ github.ref }}-macos
+          asset_name: starfish-macos
           asset_content_type: application/octet-stream
 
 
