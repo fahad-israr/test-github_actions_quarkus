@@ -3,10 +3,18 @@ name: release-build-native-macos
 on:
   release:
     types: [created] 
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
 
 jobs:
-  build:
-
+# Trigger this job only on release
+  build-on-release:
+    if: github.event_name=='release'&& github.event_name != 'pull_request'&& github.event_name != 'push'
+    name: Build on Release
     runs-on: macos-latest 
 
     steps:
@@ -29,6 +37,49 @@ jobs:
       with:
         upload_url: ${{ github.event.release.upload_url }}
         asset_path: ./target/starfish-${{ github.event.release.tag_name }}-runner
-        asset_name: starfish-${{ github.event.release.tag_name }}-runner-mac
+        asset_name: starfish
         asset_label: macos
         asset_content_type: application/octet-stream
+
+# Trigger this job only on Push or Pull-Request
+  build-on-push-pr:
+    if: github.event_name!='release'&& (github.event_name == 'pull_request'|| github.event_name != 'push')
+    name: Build on Push or PR
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install graalvm
+        uses: DeLaGuardo/setup-graalvm@3
+        with:
+          graalvm-version: '20.0.0.java11'
+      - name: Install native-image
+        run: gu install native-image
+      - name: Set version
+        run: ./mvnw versions:set -DnewVersion="1.0.0" 
+      - name: Build native executable
+        run: ./mvnw package -Dnative 
+
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1.0.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: commit-${{ github.sha}}-${{ github.run_id }}
+          release_name: Release commit-${{ github.sha }}-${{ github.run_id }}
+          draft: false
+          prerelease: false
+
+      - name: Upload native executable
+        uses: shogo82148/actions-upload-release-asset@v1
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./target/starfish-1.0.0-runner
+          asset_name: starfish
+          asset_label: macos
+          asset_content_type: application/octet-stream
+
+
+
+
+
