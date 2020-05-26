@@ -1,4 +1,4 @@
-name: push-pr-build-linux
+name: push-pr-build-macos
 on:
   # Trigger the workflow on push or pull request,
   # but only for the master branch
@@ -10,7 +10,7 @@ on:
       - master
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     steps:
       - uses: actions/checkout@v2
       - name: Install graalvm
@@ -40,6 +40,6 @@ jobs:
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: ./target/starfish-1.0.0-runner
-          asset_name: starfish-runner-linux
-          asset_label: linux
+          asset_name: starfish-runner-mac
+          asset_label: macos
           asset_content_type: application/octet-stream
