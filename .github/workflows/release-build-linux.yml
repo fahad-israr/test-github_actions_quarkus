@@ -3,10 +3,19 @@ name: release-build-linux
 on:
   release:
     types: [created] 
+  # Trigger the workflow on push or pull request,
+  # but only for the master branch
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
 
 jobs:
-  build:
-
+  build-on-release:
+    if: github.event_name=='release'&& github.event_name != 'pull_request'&& github.event_name != 'push
+    name: Build on Release
     runs-on: ubuntu-latest 
 
     steps:
@@ -33,17 +42,9 @@ jobs:
         asset_label: linux
         asset_content_type: application/octet-stream
 
-  on:
-  # Trigger the workflow on push or pull request,
-  # but only for the master branch
-  push:
-    branches:
-      - master
-  pull_request:
-    branches:
-      - master
-jobs:
-  build:
+  build-on-push-pr:
+    if: github.event_name!='release'&& github.event_name == 'pull_request'|| github.event_name != 'push
+    name: Build on Push or PR
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -57,7 +58,7 @@ jobs:
         run: ./mvnw versions:set -DnewVersion="1.0.0" 
       - name: Build native executable
         run: ./mvnw package -Dnative 
-  
+
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1.0.0
@@ -77,3 +78,8 @@ jobs:
           asset_name: starfish-runner-linux
           asset_label: linux
           asset_content_type: application/octet-stream
+
+
+
+
+
