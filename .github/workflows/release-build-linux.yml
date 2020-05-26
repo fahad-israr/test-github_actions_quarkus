@@ -14,7 +14,7 @@ on:
 
 jobs:
   build-on-release:
-    if: github.event_name=='release'&& github.event_name != 'pull_request'&& github.event_name != 'push
+    if: github.event_name=='release'&& github.event_name != 'pull_request'&& github.event_name != 'push'
     name: Build on Release
     runs-on: ubuntu-latest 
 
@@ -43,7 +43,7 @@ jobs:
         asset_content_type: application/octet-stream
 
   build-on-push-pr:
-    if: github.event_name!='release'&& github.event_name == 'pull_request'|| github.event_name != 'push
+    if: github.event_name!='release'&& github.event_name == 'pull_request'|| github.event_name != 'push'
     name: Build on Push or PR
     runs-on: ubuntu-latest
     steps:
