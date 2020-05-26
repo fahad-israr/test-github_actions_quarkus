@@ -38,7 +38,7 @@ jobs:
         upload_url: ${{ github.event.release.upload_url }}
         asset_path: ./target/starfish-${{ github.event.release.tag_name }}-runner
         asset_name: starfish
-        asset_label: macos
+        tag: ${{ github.ref }}-macos
         asset_content_type: application/octet-stream
 
 # Trigger this job only on Push or Pull-Request
@@ -76,7 +76,7 @@ jobs:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: ./target/starfish-1.0.0-runner
           asset_name: starfish
-          asset_label: macos
+          tag: ${{ github.ref }}-macos
           asset_content_type: application/octet-stream
 
 
