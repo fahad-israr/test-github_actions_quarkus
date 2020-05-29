@@ -82,4 +82,4 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: starfish-win64.exe
-          path: ./target/starfish-1.0.0-runner
+          path: /target/starfish-1.0.0-runner
