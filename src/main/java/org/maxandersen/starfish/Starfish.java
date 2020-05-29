@@ -10,6 +10,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Objects;
 import java.io.File;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 
@@ -18,8 +20,8 @@ public class Starfish implements QuarkusApplication {
   public int run(String... args) throws Exception {   
     
     
-    for(String s:args)
-    System.out.println("\nTarget : "+s);//Printing Received Arguements 
+    /*for(String s:args)
+    System.out.println("\nTarget : "+s);//Printing Received Arguements */
 
     if(args[0].equalsIgnoreCase("config")){
     //Incase user wants to configure starfish
@@ -27,8 +29,17 @@ public class Starfish implements QuarkusApplication {
     return 10; //Incase user typed "starfish config" we only want to edit configuration
     }
 
-    //Calling function for Fetching installed Packages 
-    //fetch_installed_packages(); //This function will print all installed packages
+    //URL Validation to check a valid git repository
+    String pattern="((git|ssh|http(s)?)|(git@[\\w\\.]+))(:(//)?)([\\w\\.@\\:/\\-~]+)(\\.git)(/)?";
+    Pattern r = Pattern.compile(pattern);
+    // Now create matcher object.
+    Matcher m = r.matcher(args[0]);
+    if (!m.matches()){ //Incase URI doesn't  macth our scheme we'll terminate
+        System.out.println("Not a valid URI for git repository");
+        return 10;
+    }
+
+    
 
     //Configuration identifiers
     String clone_path="";//Holds path to  destination Where the Repository Must Be Clonned
@@ -43,7 +54,7 @@ public class Starfish implements QuarkusApplication {
             editConfig(); //Calling function that lets user to configure 
         }
         
-        System.out.println("\nLoading configurations.....\n");
+        //System.out.println("\nLoading configurations.....\n");
         ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
     
         Config config = mapper.readValue(configFile, Config.class);
@@ -61,24 +72,25 @@ public class Starfish implements QuarkusApplication {
     
 
 
-    //Clonnning Git Repo
-    //Expected parameter: https://github.com/user-name/repo-name.git
+    
     String repo_name=args[0].substring(args[0].lastIndexOf("/"),args[0].lastIndexOf(".")); //Extracts the Name of Repository
-    //String clone_path= "/home/fahad/MyProjects/starfish_clonned/"; 
+   
     String originUrl = args[0];
     Path directory = Paths.get(clone_path+repo_name);
+
     if(!Files.exists(directory)) //Check if the user cloned the repo previously and in that case no cloning is needed
-    gitClone(directory, originUrl);
+    gitClone(directory, originUrl);//Calling function to clone the repository
    
 
 
 
-    //Launching Vscode on the Cloned Directory 
+    //Launching Editor on the Cloned Directory 
     System.out.println("Launching  Editor Now...");
-    runCommand(directory.getParent(), ide,clone_path+repo_name);
+    launch_editor(directory.getParent(), ide,clone_path+repo_name);//Calling Function to launch Editor
     return 10;
     
 }
+
 
 //Function to fetch config file
 public static File getConfigFile(){
@@ -156,6 +168,16 @@ public static void editConfig()throws Exception{
     }
 
 }
+
+//Function to Launch the Editor
+public static void launch_editor(Path directory,String ide,String final_clone_path)throws IOException, InterruptedException{
+//If OS is windows then we add .exe after the command    
+boolean isWindows =System.getProperty("os.name").toLowerCase().indexOf("windows")>=0;
+ide=isWindows?ide+".exe":ide;
+runCommand(directory.getParent(), ide,final_clone_path);//Launching the editor now
+
+}
+
 
 public static void gitClone(Path directory, String originUrl) throws IOException, InterruptedException {
     //Function for git clonning
