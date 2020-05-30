@@ -54,7 +54,7 @@ jobs:
       - name: Install native-image
         run: gu install native-image
       - name: Set version
-        run: ./mvnw versions:set -DnewVersion="${{github.run_number}}" 
+        run: ./mvnw versions:set -DnewVersion="${{github.sha}}" 
       - name: Build native executable
         run: ./mvnw package -Dnative 
       - name: Upload native executable
@@ -62,7 +62,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: starfish-macos-${{github.run_number}}
-          path: ./target/starfish-${{github.run_number}}-runner
+          path: ./target/starfish-${{github.sha}}-runner
    
 
 
