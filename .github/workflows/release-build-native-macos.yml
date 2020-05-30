@@ -61,7 +61,7 @@ jobs:
         id: upload-native-executable
         uses: actions/upload-artifact@v2
         with:
-          name: starfish-macos-${{github.run_number}}
+          name: starfish-macos-${{github.sha}}
           path: ./target/starfish-${{github.sha}}-runner
    
 
