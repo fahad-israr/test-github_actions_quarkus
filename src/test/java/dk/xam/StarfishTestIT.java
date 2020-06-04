@@ -1,9 +1,9 @@
-package org.maxandersen.starfish;
+package dk.xam;
 
 import io.quarkus.test.junit.NativeImageTest;
 
 @NativeImageTest
-public class StarfishTestIT extends StarfishTest {
+public class NativeExampleResourceIT extends ExampleResourceTest {
 
     // Execute the same tests but in native mode.
 }
