@@ -3,7 +3,7 @@ package dk.xam;
 import io.quarkus.test.junit.QuarkusTest;
 import org.junit.jupiter.api.Test;
 
-import static org.maxandersen.starfish.Starfish.validate_url;
+import static dk.xam.starfish.Starfish.validate_url;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static io.restassured.RestAssured.given;
