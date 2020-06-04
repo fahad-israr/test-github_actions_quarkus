@@ -30,11 +30,7 @@ public class Starfish implements QuarkusApplication {
     }
 
     //URL Validation to check a valid git repository
-    String pattern="((git|ssh|http(s)?)|(git@[\\w\\.]+))(:(//)?)([\\w\\.@\\:/\\-~]+)(\\.git)(/)?";
-    Pattern r = Pattern.compile(pattern);
-    // Now create matcher object.
-    Matcher m = r.matcher(args[0]);
-    if (!m.matches()){ //Incase URI doesn't  macth our scheme we'll terminate
+    if (!validate_url(args[0])){ //Incase URI doesn't  macth our scheme we'll terminate
         System.out.println("Not a valid URI for git repository");
         return 10;
     }
@@ -72,24 +68,36 @@ public class Starfish implements QuarkusApplication {
     
 
 
-    //Clonnning Git Repo
-    //Expected parameter: https://github.com/user-name/repo-name.git
+    
     String repo_name=args[0].substring(args[0].lastIndexOf("/"),args[0].lastIndexOf(".")); //Extracts the Name of Repository
-    //String clone_path= "/home/fahad/MyProjects/starfish_clonned/"; 
+   
     String originUrl = args[0];
     Path directory = Paths.get(clone_path+repo_name);
+
     if(!Files.exists(directory)) //Check if the user cloned the repo previously and in that case no cloning is needed
-    gitClone(directory, originUrl);
+    gitClone(directory, originUrl);//Calling function to clone the repository
    
 
 
 
-    //Launching Vscode on the Cloned Directory 
+    //Launching Editor on the Cloned Directory 
     System.out.println("Launching  Editor Now...");
-    runCommand(directory.getParent(), ide,clone_path+repo_name);
+    launch_editor(directory.getParent(), ide,clone_path+repo_name);//Calling Function to launch Editor
     return 10;
     
+}//Main method ends here
+
+
+//Function to validate URL using with Regex
+public static boolean validate_url(String url){
+    //URL Validation to check a valid git repository
+    String pattern="((git|ssh|http(s)?)|(git@[\\w\\.]+))(:(//)?)([\\w\\.@\\:/\\-~]+)(\\.git)(/)?";
+    Pattern r = Pattern.compile(pattern);
+    // Now create matcher object.
+    Matcher m = r.matcher(url);
+    return m.matches();
 }
+
 
 //Function to fetch config file
 public static File getConfigFile(){
@@ -167,6 +175,16 @@ public static void editConfig()throws Exception{
     }
 
 }
+
+//Function to Launch the Editor
+public static void launch_editor(Path directory,String ide,String final_clone_path)throws IOException, InterruptedException{
+//If OS is windows then we add .exe after the command    
+boolean isWindows =System.getProperty("os.name").toLowerCase().indexOf("windows")>=0;
+ide=isWindows?ide+".exe":ide;
+runCommand(directory.getParent(), ide,final_clone_path);//Launching the editor now
+
+}
+
 
 public static void gitClone(Path directory, String originUrl) throws IOException, InterruptedException {
     //Function for git clonning
