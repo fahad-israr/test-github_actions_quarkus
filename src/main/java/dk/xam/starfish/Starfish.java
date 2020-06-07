@@ -181,7 +181,7 @@ public static void editConfig()throws Exception{
 }
 
 //Function to Launch the Editor
-public static void launch_editor(Path directory,String ide,String final_clone_path)throws IOException, InterruptedException{    
+public static String launch_editor(Path directory,String ide,String final_clone_path)throws IOException, InterruptedException{    
 runCommand(directory.getParent(), ide,final_clone_path);//Launching the editor now
 
 }
