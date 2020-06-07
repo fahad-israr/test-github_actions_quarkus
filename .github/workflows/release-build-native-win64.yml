@@ -18,9 +18,9 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Install vscode using Chocolatey
-      run: choco install vscode
-    - name: Refresh Environment
-      run: refreshenv
+      run:  |
+            powershell 
+            choco install vscode
     - name: Install graalvm
       uses: DeLaGuardo/setup-graalvm@3
       with:
@@ -61,7 +61,9 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Install vscode using Chocolatey
-        run: choco install vscode
+        run:  |
+              powershell 
+              choco install vscode
       - name: Install graalvm
         uses: DeLaGuardo/setup-graalvm@3
         with:
