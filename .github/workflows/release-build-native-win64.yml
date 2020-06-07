@@ -21,6 +21,10 @@ jobs:
       run:  |
             powershell 
             choco install vscode
+    - name: Refresh Environment
+      run: |
+           powershell
+           refreshenv
     - name: Install graalvm
       uses: DeLaGuardo/setup-graalvm@3
       with:
@@ -64,6 +68,10 @@ jobs:
         run:  |
               powershell 
               choco install vscode
+      - name: Refresh Environment
+        run: |
+             powershell
+             refreshenv
       - name: Install graalvm
         uses: DeLaGuardo/setup-graalvm@3
         with:
