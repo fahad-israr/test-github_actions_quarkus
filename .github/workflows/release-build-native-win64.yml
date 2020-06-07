@@ -18,9 +18,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Install vscode using Chocolatey
-      uses: crazy-max/ghaction-chocolatey@v1
-      with:
-        args: choco install vscode
+      run: choco install vscode
     - name: Install graalvm
       uses: DeLaGuardo/setup-graalvm@3
       with:
@@ -61,9 +59,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Install vscode using Chocolatey
-        uses: crazy-max/ghaction-chocolatey@v1
-        with:
-          args: choco install vscode
+        run: choco install vscode
       - name: Install graalvm
         uses: DeLaGuardo/setup-graalvm@3
         with:
