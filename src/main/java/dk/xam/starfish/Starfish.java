@@ -75,7 +75,7 @@ public class Starfish implements QuarkusApplication {
     Path directory = Paths.get(clone_path+repo_name);
 
     if(!Files.exists(directory)) //Check if the user cloned the repo previously and in that case no cloning is needed
-    gitClone(directory, originUrl);//Calling function to clone the repository
+    gitClone(directory, originUrl);
    
 
 
@@ -85,7 +85,7 @@ public class Starfish implements QuarkusApplication {
     launch_editor(directory.getParent(), ide,clone_path+repo_name);
     return 10;
     
-}//Main method ends here
+}//Main ends here
 
 
 //Function to validate URL using with Regex
@@ -181,9 +181,9 @@ public static void editConfig()throws Exception{
 }
 
 //Function to Launch the Editor
-public static String launch_editor(Path directory,String ide,String final_clone_path)throws IOException, InterruptedException{    
+public static void launch_editor(Path directory,String ide,String final_clone_path)throws IOException, InterruptedException{    
 runCommand(directory.getParent(), ide,final_clone_path);//Launching the editor now
-return "";
+
 
 }
 
@@ -196,9 +196,15 @@ public static void gitClone(Path directory, String originUrl) throws IOException
 
 
 
-public static void runCommand(Path directory, String... command) throws IOException, InterruptedException {
+public static String runCommand(Path directory, String... command) throws IOException, InterruptedException {
     //Function to Run Commands using Process Builder
+    Process p=process_runner(directory,command);
+    return gobbleStream(p);
     
+
+}
+
+public static Process process_runner(Path directory, String... command)throws IOException, InterruptedException{
     Objects.requireNonNull(directory, "directory");
     if (!Files.exists(directory)) {
         throw new RuntimeException("can't run command in non-existing directory '" + directory + "'");
@@ -207,22 +213,34 @@ public static void runCommand(Path directory, String... command) throws IOExcept
             .command(command)
             .directory(directory.toFile());
     Process p = pb.start();
+
+    int exit = p.waitFor();
+
+    if (exit != 0) {
+        throw new AssertionError(String.format("runCommand returned %d", exit));
+    }
+    return p;
+}
+
+
+public static String gobbleStream(Process p) throws IOException, InterruptedException{
     StreamGobbler errorGobbler = new StreamGobbler(p.getErrorStream(), "E");
     StreamGobbler outputGobbler = new StreamGobbler(p.getInputStream(), "O");
     outputGobbler.start();
     errorGobbler.start();
     int exit = p.waitFor();
-    errorGobbler.join();
-    outputGobbler.join();
     if (exit != 0) {
         throw new AssertionError(String.format("runCommand returned %d", exit));
     }
+    errorGobbler.join();
+    outputGobbler.join();
+    return outputGobbler.getExecResult()+errorGobbler.getExecResult();
 }
 
 
 
 private static class StreamGobbler extends Thread {
-
+    private volatile String exec_result;
     private final InputStream is;
     private final String type;
 
@@ -233,20 +251,26 @@ private static class StreamGobbler extends Thread {
 
     @Override
     public void run() {
+        exec_result=""; //Resets result variable for every new process execution 
         try (BufferedReader br = new BufferedReader(new InputStreamReader(is));) {
             String line;
+
             while ((line = br.readLine()) != null) {
                 System.out.println(type + "> " + line);
+                exec_result+=line;
             }
         } catch (IOException ioe) {
             ioe.printStackTrace();
             
         }
     }
+
+    public String getExecResult(){
+        return exec_result;
+    }
 }
 
 
-//Function to fetch all installed packages on System
 
 
 
