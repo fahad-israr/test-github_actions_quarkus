@@ -19,16 +19,6 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    - name: Install dependencies for vscode
-      run: sudo apt install software-properties-common apt-transport-https wget
-    - name: import the Microsoft GPG key
-      run: wget -q https://packages.microsoft.com/keys/microsoft.asc -O- | sudo apt-key add -
-    - name: enable the Visual Studio Code repository
-      run: sudo add-apt-repository "deb [arch=amd64] https://packages.microsoft.com/repos/vscode stable main"
-    - name: update apt
-      run: sudo apt update
-    - name: Install Code
-      run: sudo apt install code
     - name: Install graalvm
       uses: DeLaGuardo/setup-graalvm@3
       with:
@@ -46,8 +36,8 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ github.event.release.upload_url }}
-        asset_path: ./target/starfish-${{ github.event.release.tag_name }}-runner
-        asset_name: starfish-linux
+        asset_path: ./target/starfish-${{ github.event.release.tag_name }}.zip
+        asset_name: starfish-linux.zip
         asset_content_type: application/octet-stream
 
 # Trigger this job only on Push or Pull-Request
@@ -57,16 +47,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Install dependencies for vscode
-        run: sudo apt install software-properties-common apt-transport-https wget
-      - name: import the Microsoft GPG key
-        run: wget -q https://packages.microsoft.com/keys/microsoft.asc -O- | sudo apt-key add -
-      - name: enable the Visual Studio Code repository
-        run: sudo add-apt-repository "deb [arch=amd64] https://packages.microsoft.com/repos/vscode stable main"
-      - name: update apt
-        run: sudo apt update
-      - name: Install Code
-        run: sudo apt install code
       - name: Install graalvm
         uses: DeLaGuardo/setup-graalvm@3
         with:
@@ -81,8 +61,8 @@ jobs:
         id: upload-native-executable
         uses: actions/upload-artifact@v2
         with:
-          name: starfish-linux-${{github.sha}}
-          path: ./target/starfish-${{github.sha}}-runner
+          name: starfish-linux-${{github.sha}}.zip
+          path: ./target/starfish-${{github.sha}}.zip
           
 
 
