@@ -15,7 +15,7 @@
     </fileSets>
     <files>
         <file>
-            <source> ${project.build.directory}/${project.build.finalName}-${os.name}-runner</source>
+            <source> ${project.build.directory}/${project.build.finalName}-runner</source>
             <outputDirectory>/installer</outputDirectory>
         </file>
     </files>
