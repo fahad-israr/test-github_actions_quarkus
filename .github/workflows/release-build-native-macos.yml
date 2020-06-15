@@ -36,7 +36,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ github.event.release.upload_url }}
-        asset_path: ./target/starfish-${{ github.event.release.tag_name }}-runner.zip
+        asset_path: ./target/starfish-${{ github.event.release.tag_name }}.zip
         asset_name: starfish-macos.zip
         asset_content_type: application/octet-stream
 
@@ -62,7 +62,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: starfish-macos-${{github.sha}}.zip
-          path: ./target/starfish-${{github.sha}}-runner.zip
+          path: ./target/starfish-${{github.sha}}.zip
    
 
 
