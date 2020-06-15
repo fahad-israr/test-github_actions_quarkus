@@ -17,14 +17,6 @@ jobs:
     runs-on: windows-2019
     steps:
     - uses: actions/checkout@v2
-    - name: Install vscode using Chocolatey
-      run:  |
-            powershell 
-            choco install vscode
-    - name: Refresh Environment
-      run: |
-           powershell
-           refreshenv
     - name: Install graalvm
       uses: DeLaGuardo/setup-graalvm@3
       with:
@@ -64,14 +56,6 @@ jobs:
     runs-on: windows-2019
     steps:
       - uses: actions/checkout@v2
-      - name: Install vscode using Chocolatey
-        run:  |
-              powershell 
-              choco install vscode
-      - name: Refresh Environment
-        run: |
-             powershell
-             refreshenv
       - name: Install graalvm
         uses: DeLaGuardo/setup-graalvm@3
         with:
@@ -99,4 +83,3 @@ jobs:
         with:
           name: starfish-win64-${{github.sha}}.zip
           path: ./target/starfish-${{github.sha}}-runner.zip
-
