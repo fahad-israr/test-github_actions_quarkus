@@ -9,14 +9,14 @@
     </formats>
     <fileSets>
         <fileSet>
-            <directory>${project.basedir}/installer/${os.name}/</directory>
+            <directory>${project.basedir}/installer/linux/</directory>
              <outputDirectory>/</outputDirectory>
         </fileSet>
     </fileSets>
     <files>
         <file>
-            <source> ${project.build.directory}/${project.build.finalName}-runner.exe</source>
-            <outputDirectory>/installer/Starfish</outputDirectory>
+            <source> ${project.build.directory}/${project.build.finalName}-runner</source>
+            <outputDirectory>/installer</outputDirectory>
         </file>
     </files>
 </assembly>
